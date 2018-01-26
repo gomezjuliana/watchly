@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import GifItem from './GifItem.js';
+import GifItem from './GifItem';
 
 const GifList = (props) => {
 	const videoItems = props.videos.map((video) => {
-		return <GifItem key={video.etag} snippet={video.snippet.publishedAt} />
+		return <GifItem key={video.etag} 
+						video={video} 
+						onClick={() => props.selectAVideo(video.id.videoId)}/>
 	});
 
 	return (

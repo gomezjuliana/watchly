@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import './App.css';
-import GifList from './components/GifList.js'
-import SearchBar from './components/SearchBar.js';
+import GifList from './components/GifList'
+import SearchBar from './components/SearchBar';
+import VideoPlayer from './components/VideoPlayer'
 
 class App extends Component {
   constructor(){
     super();
 
     this.state = {
-      videos: []
+      videos: [],
+      selectedVideoId: null
     };
 
     this.handleTermChange = this.handleTermChange.bind(this);
+    this.selectAVideo = this.selectAVideo.bind(this);
+    this.resetSelectedVideoId = this.resetSelectedVideoId.bind(this);
   }
 
   handleTermChange(term){
@@ -21,13 +25,34 @@ class App extends Component {
       .catch((err) => console.log(err));
   }
 
+  selectAVideo(videoId){
+    this.setState({selectedVideoId: videoId});
+  }
+
+  resetSelectedVideoId(){
+    this.setState({selectedVideoId: null})
+  }
+
   render() {
-    return (
-      <div>
-        <SearchBar onTermChange={this.handleTermChange} />
-        <GifList videos={this.state.videos} />
-      </div>
-    );
+
+    if (this.state.selectedVideoId){
+      const selectedVideo = this.state.videos.find(video => this.state.selectedVideoId === video.id.videoId)
+      return (
+        <div>
+          <VideoPlayer video={selectedVideo} />
+          <button onClick={this.resetSelectedVideoId}>Back</button>
+        </div>
+      )
+
+    } else {
+      return (
+        <div>
+          <SearchBar onTermChange={this.handleTermChange} />
+          <GifList videos={this.state.videos} selectAVideo={this.selectAVideo} />
+        </div>
+      );
+    }
+    
   }
 }
 
